@@ -235,7 +235,11 @@ p {
   background: none;
   border: none;
   cursor: pointer;
-  padding: 8px;
+  padding: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
 }
 .nav-toggle span {
   display: block;
@@ -934,14 +938,11 @@ p {
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   .nav-links.open { display: flex; }
+  .nav-links a { font-size: 1rem; padding: 6px 0; }
   .nav-toggle { display: flex; }
 
-  .events-grid { grid-template-columns: 1fr; }
-
-  .pricing-card {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
+  /* Hero */
+  .hero-title { font-size: clamp(3.2rem, 13vw, 12rem); }
 
   .hero-stats {
     padding: 12px 22px;
@@ -953,22 +954,78 @@ p {
   .stat-number { font-size: 1.15rem; }
   .hero-scroll-indicator { display: none; }
 
+  /* Scroll story : layout statique empilé sur mobile */
+  .scroll-story { height: auto !important; }
+  .story-sticky {
+    position: relative;
+    height: auto;
+    display: block;
+  }
+  .story-image-container {
+    position: relative;
+    height: clamp(240px, 56vw, 400px);
+  }
+  .story-image { inset: 0; }
+  .story-image-overlay {
+    background: linear-gradient(180deg, rgba(9,14,29,0.1) 0%, rgba(9,14,29,0.65) 100%);
+  }
   .story-text-layers {
-    padding: 0 var(--gutter);
+    position: relative;
+    width: 100%;
+    padding: 0;
     max-width: 100%;
-    margin-left: 0;
+    margin: 0;
+  }
+  /* Chaque layer : empilé, anime en scroll via .visible (IntersectionObserver) */
+  .story-layer {
+    position: relative;
+    top: auto;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.75s var(--ease-out), transform 0.75s var(--ease-out);
+    pointer-events: auto;
+    padding: 36px var(--gutter);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: var(--color-dark);
+  }
+  /* Annuler le transform: translateY(-50%) de .story-layer.active sur mobile */
+  .story-layer.active,
+  .story-layer.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .story-layer:last-child { border-bottom: none; }
+  .story-text-content { max-width: 100%; margin: 0; }
+
+  /* Hero : désactiver Ken Burns sur mobile (perf) */
+  .hero-bg { animation: none; inset: 0; }
+
+  /* Parallax côte : reset inset puisque l'effet est désactivé sur mobile */
+  .parallax-img { inset: 0; }
+
+  .events-grid { grid-template-columns: 1fr; }
+
+  .pricing-card {
+    grid-template-columns: 1fr;
+    gap: 36px;
   }
 
-  .coast-section { height: 60vh; }
+  .coast-section { height: 60vh; min-height: 320px; }
   .coast-inner h2 { font-size: 2rem; }
+  .coast-inner { max-width: 100%; }
 }
 
 @media (max-width: 480px) {
   .form-row { grid-template-columns: 1fr; }
   .footer-top { grid-template-columns: 1fr; }
   .hero-content { padding-bottom: 0; }
+  .hero-title { font-size: clamp(2.8rem, 14vw, 12rem); }
   .hero-stats { display: none; }
   .hero-cta .btn-outline { display: none; }
+  .event-card-image { height: 200px; }
+  .coast-section { height: 50vh; min-height: 280px; }
+  .footer-bottom { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .footer-legal { flex-wrap: wrap; gap: 16px; }
 }
 
 /* =======================================

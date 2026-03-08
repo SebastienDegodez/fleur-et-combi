@@ -61,6 +61,7 @@ const coastSection  = coastParallax?.closest('.coast-section');
 
 function updateCoastParallax() {
   if (!coastParallax || !coastSection) return;
+  if (window.innerWidth < 768) return; // désactivé sur mobile
   const rect     = coastSection.getBoundingClientRect();
   const progress = rect.top / window.innerHeight; // -1 à +1
   coastParallax.style.transform = `translateY(${progress * 45}px)`;
@@ -85,6 +86,12 @@ const CHAPTERS     = storyLayers.length;
 function setupScrollStory() {
   if (!scrollStory || !CHAPTERS) return;
 
+  // Mobile : layers empilés, chacun animé par IntersectionObserver (reveal au scroll)
+  if (window.innerWidth < 768) {
+    storyLayers.forEach(l => revealObserver.observe(l));
+    return;
+  }
+
   // Hauteur = N chapitres × 100vh (scroll space)
   scrollStory.style.height = `${CHAPTERS * 100}vh`;
 
@@ -101,6 +108,7 @@ function activateChapter(index) {
 
 function updateScrollStory() {
   if (!scrollStory || !CHAPTERS) return;
+  if (window.innerWidth < 768) return; // géré par IntersectionObserver sur mobile
 
   const rect            = scrollStory.getBoundingClientRect();
   const totalScrollable = scrollStory.offsetHeight - window.innerHeight;
